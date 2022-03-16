@@ -14,4 +14,18 @@ Each step contains a readme with the explanation and, if needed, some code.
     - [Installation](./00%20-%20Into/readme.md#installation)
     - [First Example](./00%20-%20Into/readme.md#first-example)
     - [Adding Types](./00%20-%20Into/readme.md#adding-types)
+1. Typification
+    - [Types](./01%20-%20Typification/readme.md#types)
+    - [Type Annotation](./01%20-%20Typification/readme.md#type-annotation)
+    - [Type Inference](./01%20-%20Typification/readme.md#type-inference)
+    - [Any](./01%20-%20Typification/readme.md#any)
+    - [Functions](./01%20-%20Typification/readme.md#functions)
+    - [Destructuring](./01%20-%20Typification/readme.md#destructuring)
+    - [Arrays](./01%20-%20Typification/readme.md#arrays)
+    - [Tuples](./01%20-%20Typification/readme.md#tuples)
+    - [Interfaces](./01%20-%20Typification/readme.md#interfaces)
+    - [Classes](./01%20-%20Typification/readme.md#classes)
+
+
+
 
