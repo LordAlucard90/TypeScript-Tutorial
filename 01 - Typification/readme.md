@@ -258,7 +258,7 @@ const multipleDates: (Date | string)[] = [new Date()] // (Date | string)[]
 
 ## Tuples
 
-A tuple is an array with a specific order of elements that as a fixed meaning.
+A tuple is an array with a specific order of elements that has a fixed meaning.
 
 ```typescript
 const pepsiObj = {

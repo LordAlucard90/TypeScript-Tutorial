@@ -1,0 +1,25 @@
+{
+  "name": "best-practices",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:build": "tsc -w",
+    "start:run": "nodemon build/index.js",
+    "start": "concurrently npm:start:*"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@faker-js/faker": "^6.1.2",
+    "@types/faker": "^5.5.7",
+    "@types/google.maps": "^3.45.6",
+    "@types/node": "^16.9.1",
+    "concurrently": "^6.2.1",
+    "nodemon": "^2.0.12"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  }
+}
