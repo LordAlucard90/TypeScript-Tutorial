@@ -23,8 +23,10 @@ Each step contains a readme with the explanation and, if needed, some code.
     - [Destructuring](./01%20-%20Typification/readme.md#destructuring)
     - [Arrays](./01%20-%20Typification/readme.md#arrays)
     - [Tuples](./01%20-%20Typification/readme.md#tuples)
+    - [Enums](./01%20-%20Typification/readme.md#enums)
     - [Interfaces](./01%20-%20Typification/readme.md#interfaces)
     - [Classes](./01%20-%20Typification/readme.md#classes)
+    - [Generics](./01%20-%20Typification/readme.md#generics)
 1. [**Best Practices**](./02%20-%20Best%20Practices/readme.md)
     - [Parcel Bundler](./02%20-%20Best%20Practices/readme.md#parcel-bundler)
     - [Class Files](./02%20-%20Best%20Practices/readme.md#class-files)
@@ -32,6 +34,10 @@ Each step contains a readme with the explanation and, if needed, some code.
     - [Google Maps Api](./02%20-%20Best%20Practices/readme.md#google-maps-api)
     - [Data Hiding](./02%20-%20Best%20Practices/readme.md#data-hiding)
     - [Generalization](./02%20-%20Best%20Practices/readme.md#generalization)
-
+1. [**Interfaces And Abstract Classes**](./02%20-%20Interfaces%20And%20Abstract%20Classes/readme.md)
+    - [Setup Compiling](./02%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#setup-compiling)
+    - [Type Guards](./02%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#type-guards)
+    - [Generalizing](./02%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#generalizing)
+    - [Abstract Sorter](./02%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#abstract-sorter)
 
 

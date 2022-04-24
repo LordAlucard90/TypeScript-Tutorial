@@ -10,8 +10,10 @@
 - [Destructuring](#destructuring)
 - [Arrays](#arrays)
 - [Tuples](#tuples)
+- [Enums](#enums)
 - [Interfaces](#interfaces)
 - [Classes](#classes)
+- [Generics](#generics)
 
 ---
 
@@ -112,15 +114,11 @@ console.log(coordinates)
 
 #### Variable Declaration
 
+It is possible to force the type declaring it explicitly
+
 ```typescript
 let value; // any
-```
-
-It is possible to force the type declaring it explycitely
-
-
-```typescript
-let value: number; // any
+let value: number; // number
 ```
 
 #### Hard Variable Declaration
@@ -141,6 +139,7 @@ The code above can be fixed in the fallowing way:
 
 ```typescript
 let numbers = [-10, -1, 12];
+// even if it is possible doesn't mean that should be done
 let numberAboveZero: boolean | number = false; // multiple type possible
 
 for (let 1 = 0; i < numbers.length; i++) {
@@ -276,6 +275,85 @@ const pepsiTuple: Drink = ['brown', true, 40];
 ```
 
 Tuples are useful in context like csv definition.
+
+## Enums
+
+Enums are used to define a set of named constants,
+they should be used only for small sets of static values.
+
+By default enums are numeric and can be defined in this way:
+```typescript
+enum Direction {
+  Up,         // 0
+  Down,       // 1
+  Left,       // 2
+  Right,      // 3
+}
+```
+if the first value is explicitly set, the others will follow incrementally:
+```typescript
+enum Direction {
+  Up = 1,
+  Down,       // 2
+  Left,       // 3
+  Right,      // 4
+}
+```
+all the members can be initialized whit the desired values:
+```typescript
+enum UserResponse {
+  No = 0,
+  Yes = 1,
+}
+```
+the values can also be the result of some calculation, but coputed values
+must be at the end:
+```typescript
+enum Enum { // not ok
+  A = getSomeValue(),
+  B,
+}
+enum Enum { // ok
+  A,
+  B = getSomeValue(),
+}
+```
+enums can be defined also al strings:
+```typescript
+enum Direction {
+  Up = "UP",
+  Down = "DOWN",
+  Left = "LEFT",
+  Right = "RIGHT",
+}
+```
+or with mixed values:
+```typescript
+enum MixedResponse {
+  No = 0,
+  Yes = "YES",
+}
+```
+thier values can be revese mapped:
+```typescript
+enum Enum {
+  A,
+}
+ 
+let a = Enum.A;
+let nameOfA = Enum[a]; // "A"
+```
+Values can be converted to enums using the type assertion:
+```typescript
+enum Direction {
+  Up = "UP",
+  Down = "DOWN",
+  Left = "LEFT",
+  Right = "RIGHT",
+}
+var directionString = "UP"
+var direction = directionString as Direction
+```
 
 ## Interfaces
 
@@ -416,5 +494,226 @@ class Motorbike extends Vehicle {
     }
 }
 const motorbike = new Motorbike("red");
+```
+
+### Interfaces Extension
+
+A class can extend an interface, it must define all ies methods:
+```typescript
+interface Vehicle {
+    color: string;
+    drive(): void;
+}
+
+class Car implements Vehicle {
+    constructor(public color: string){}
+
+    drive() {
+        console.log("Bruuuuuum!");
+    }
+}
+
+class Motorbike implements Vehicle {
+    color = "red";
+
+    drive() {
+        console.log("Breeeeeem!");
+    }
+}
+
+const car = new Car("black");
+car.drive()
+
+const motorbike = new Motorbike();
+motorbike.drive()
+```
+
+### Abstract Classes
+
+An abstract class is like a class but can define methods and values that will
+be implemented by the derived classes:
+```typescript
+abstract class Vehicle {
+    color: string = "red";
+    abstract year: number;
+    abstract drive(): void;
+    honk(): void {
+        console.log("Beeeep!");
+    }
+}
+
+class Car extends Vehicle {
+    constructor(public color: string, public year: number){
+        super()
+    }
+
+    drive() {
+        console.log("Bruuuuuum!");
+    }
+
+    honk() {
+        console.log("boooop!")
+    }
+}
+
+class Motorbike extends Vehicle {
+    year = 2001;
+
+    drive() {
+        console.log("Breeeeeem!");
+    }
+}
+
+const car = new Car("black", 1999);
+car.drive()
+car.honk()
+
+const motorbike = new Motorbike();
+motorbike.drive()
+motorbike.honk()
+```
+
+### Static Class Members
+
+Static class members, are members that can be called without creatins a new 
+class instance:
+```typescript
+class DateContainer {
+    static CREATION = new Date();
+
+    static now(): Date {
+        return new Date();
+    }
+}
+
+console.log(DateContainer.CREATION);
+console.log(DateContainer.now());
+```
+
+## Generics
+
+Generics are a powerful way to reuse code and logic 
+across different implementations.
+
+### Generic Classes
+
+Taking as example two similar classes:
+```typescript
+class ArrayOfNumbers {
+    constructor(public collection: number[]){}
+
+    get(index: number): number {
+        return this.collection[index];
+    }
+}
+const arrayOfNumbers = new ArrayOfNumbers([1, 2, 3]);
+
+class ArrayOfStrings {
+    constructor(public collection: string[]){}
+
+    get(index: number): string {
+        return this.collection[index];
+    }
+}
+const arrayOfStrings = new ArrayOfStrings(["a", "b", "c"]);
+```
+The generic equivalent implementation is:
+```typescript
+class ArrayOfAnything<T> {
+    constructor(public collection: T[])
+
+    get(index: number): T {
+        return this.collection[index];
+    }
+}
+const arrayOfStrings = new ArrayOfAnything<string>(["a", "b", "c"]);
+const arrayOfNumbers = new ArrayOfAnything<number>([1, 2, 3]);
+```
+TypeScript is able to automatically infer the type of the generic:
+```typescript
+const arrayOfStrings = new ArrayOfAnything<string>(["a", "b", "c"]); // ArrayOfAnything<string>
+const arrayOfStrings = new ArrayOfAnything(["a", "b", "c"]); // ArrayOfAnything<string>
+```
+
+### Generic Functions
+
+Like for classes, also for following functions:
+```typescript
+function printStrings(arr: string[]): void {
+    for (let i = 0; i < arr.length; i++) {
+        console.log(arr[i]);
+    }
+}
+printStrings(["a", "b", "c"]);
+
+function printNumbers(arr: number[]): void {
+    for (let i = 0; i < arr.length; i++) {
+        console.log(arr[i]);
+    }
+}
+printNumbers([1, 2, 3]);
+```
+it is possible to inplement the generic version:
+```typescript
+function printAnything<T>(arr: T[]): void {
+    for (let i = 0; i < arr.length; i++) {
+        console.log(arr[i]);
+    }
+}
+printAnything<number>([1, 2, 3]);
+printAnything<string>(["a", "b", "c"]);
+```
+As for the class, the type is automatically inferred:
+```typescript
+printAnything<number>([1, 2, 3]); // T = number
+printAnything([1, 2, 3]); // T = number
+```
+
+### Type Constraints
+
+By default a generic parameter can be anything.
+However it is possible to speciry some limitation on the classes that can 
+be used by the generic class or method to be able to access more properties:
+```typescript
+interface Printable {
+    print(): void;
+}
+
+class Car implements Printable {
+    print() {
+        console.log("I'm a Car!");
+    }
+}
+
+class House implements Printable {
+    print() {
+        console.log("I'm an House!");
+    }
+}
+
+// not valid implementation
+// function printHousesOrCars<T>(arr: T[]): void {
+//     for (let i = 0; i < arr.length; i++) {
+//         arr[i].print(); // unknown property
+//     }
+// }
+
+// valid implementation
+function printHousesOrCars<T extends Printable>(arr: T[]): void {
+    for (let i = 0; i < arr.length; i++) {
+        arr[i].print();
+    }
+}
+
+// valid usages
+printHousesOrCars<House>([new House(), new House()])
+printHousesOrCars<Car>([new Car(), new House()])
+printHousesOrCars([new House(), new House()])
+printHousesOrCars([new Car(), new Car()])
+printHousesOrCars([new Car(), new House()])
+
+// invalid usages
+<!-- printHousesOrCars<House>([new Car(), new House()]) -->
+<!-- printHousesOrCars<Car>([new Car(), new House()]) -->
 ```
 

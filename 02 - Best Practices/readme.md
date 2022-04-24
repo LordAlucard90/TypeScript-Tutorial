@@ -56,9 +56,9 @@ used from Typescript to fully understand how to use it.
 It is possible to manually install the definition files.
 There are already a lot of files defined at `@types/<library_name>`,
 they are files define as `<library_name>.d.ts` are contains only types definitions.
-It is enough to import them for `faker` it is `@typer/faker`:
+It is enough to import them for `faker` it is `@types/faker`:
 ```bash
-npm i @typer/faker
+npm i @types/faker
 ```
 
 ```typescript
@@ -87,7 +87,7 @@ npm i @types/google.maps
 
 In order to avoid wrong use of our class, it is a good practice to wrap the
 google maps class inside a `CustomMap` one, so that only the methods that
-we want to expose are acceessible:
+we want to expose are accessible:
 
 ```typescript
 export class CustomMap {

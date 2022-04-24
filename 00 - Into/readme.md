@@ -79,7 +79,7 @@ ts-node index.ts
 
 ## Adding Types
 
-TypeScript allows to improve the type check in this way:
+TypeScript allows to improve the type check using the type assertion:
 ```typescript
 import axios from 'axios';
 
@@ -108,6 +108,5 @@ const logTodo = (id: number, title: string, finished: boolean) => {
                         - finished: ${finished}
                     `);
 };
-
 ```
 
