@@ -34,10 +34,10 @@ Each step contains a readme with the explanation and, if needed, some code.
     - [Google Maps Api](./02%20-%20Best%20Practices/readme.md#google-maps-api)
     - [Data Hiding](./02%20-%20Best%20Practices/readme.md#data-hiding)
     - [Generalization](./02%20-%20Best%20Practices/readme.md#generalization)
-1. [**Interfaces And Abstract Classes**](./02%20-%20Interfaces%20And%20Abstract%20Classes/readme.md)
-    - [Setup Compiling](./02%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#setup-compiling)
-    - [Type Guards](./02%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#type-guards)
-    - [Generalizing](./02%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#generalizing)
-    - [Abstract Sorter](./02%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#abstract-sorter)
+1. [**Interfaces And Abstract Classes**](./03%20-%20Interfaces%20And%20Abstract%20Classes/readme.md)
+    - [Setup Compiling](./03%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#setup-compiling)
+    - [Type Guards](./03%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#type-guards)
+    - [Generalizing](./03%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#generalizing)
+    - [Abstract Sorter](./03%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#abstract-sorter)
 
 
