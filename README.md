@@ -39,5 +39,12 @@ Each step contains a readme with the explanation and, if needed, some code.
     - [Type Guards](./03%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#type-guards)
     - [Generalizing](./03%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#generalizing)
     - [Abstract Sorter](./03%20-%20Interfaces%20And%20Abstract%20Classes/readme.md#abstract-sorter)
-
+1. [**Inheritance And Composition**](./04%20-%20Inheritance%20And%20Composition/readme.md)
+- [Setup](./04%20-%20Inheritance%20And%20Composition/readme.md#setup)
+- [Read Csv](./04%20-%20Inheritance%20And%20Composition/readme.md#read-csv)
+- [Enums](./04%20-%20Inheritance%20And%20Composition/readme.md#enums)
+- [Csv File Reader](./04%20-%20Inheritance%20And%20Composition/readme.md#csv-file-reader)
+- [Generic Csv Reader](./04%20-%20Inheritance%20And%20Composition/readme.md#generic-csv-reader)
+- [Composed Match Reader](./04%20-%20Inheritance%20And%20Composition/readme.md#composed-match-reader)
+- [Static Constructors](./04%20-%20Inheritance%20And%20Composition/readme.md#static-constructors)
 

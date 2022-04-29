@@ -149,6 +149,16 @@ for (let 1 = 0; i < numbers.length; i++) {
 }
 ```
 
+#### Generic Object
+
+A generic object, can be mapped specifying the key and value type:
+```typescript
+let obj: {[key: string]: number} = {
+    "first": 1,
+    "second": 2,
+}
+```
+
 ## Functions
 
 For function TypeScript will try to understand the type of the return,
@@ -183,6 +193,7 @@ const error = (message: string): never {
     throws new Error(message);
 }
 ```
+
 
 ## Destructuring
 
@@ -573,6 +584,10 @@ motorbike.drive()
 motorbike.honk()
 ```
 
+### Accessors
+
+TODO get set 
+
 ### Static Class Members
 
 Static class members, are members that can be called without creatins a new 
@@ -713,7 +728,36 @@ printHousesOrCars([new Car(), new Car()])
 printHousesOrCars([new Car(), new House()])
 
 // invalid usages
-<!-- printHousesOrCars<House>([new Car(), new House()]) -->
-<!-- printHousesOrCars<Car>([new Car(), new House()]) -->
+// printHousesOrCars<House>([new Car(), new House()])
+// printHousesOrCars<Car>([new Car(), new House()])
 ```
+
+### Dynamic Return
+
+Given a generic class and a get attribute method that retrieves one of the values
+of the composed object, it is possible to infer the return type in this way:
+```typescript
+class Composed {
+    aNumber: number;
+    aString: string;
+}
+
+export class DynamicGetter<T> {
+    constructor(private data: T){}
+
+    get<K extends keyof T>(key: K): T[K] {
+        return this.data[key];
+    }
+}
+
+const getter = new DynamicGetter<Composed>({
+    aNumber: 42,
+    aString: "example",
+})
+
+const aNumber: number = getter.get("aNumber")
+const aString: string = getter.get("aString")
+```
+
+
 
