@@ -13,7 +13,10 @@
 - [Enums](#enums)
 - [Interfaces](#interfaces)
 - [Classes](#classes)
+- [Type Guards](#type-guards)
 - [Generics](#generics)
+- [Decorators](#decorators)
+- [Metadata](#metadata)
 
 ---
 
@@ -605,6 +608,35 @@ console.log(DateContainer.CREATION);
 console.log(DateContainer.now());
 ```
 
+## Type Guards
+
+When the type is not completely defined, for example an element can be null
+or of a completely different type:
+```typescript
+let possibleNull = string | undefined
+let variableDate = string | Date
+```
+It is possible to use a type Guard to force locally the current type of the
+variable and to be able to see all its methods:
+```typescript
+let possibleNull = string | undefined
+if(possibleNull) {
+    possibleNull.toUpperCase() // now this operation is safe
+}
+
+let variableDate = string | Date
+if (variableDate instanceof Date) {
+    // date methods are accessible in this scope
+}
+if (typeof variableDate === 'string') {
+    // string methods are accessible in this scope
+}
+```
+Depending of the type of the variable the type guard changes its definition:
+- **Primitive Types**: `typeof` (number, string, boolean, symbol)
+- **Other Types**: `instanceof`
+for the not nulla check the if condiction is enught.
+
 ## Generics
 
 Generics are a powerful way to reuse code and logic 
@@ -759,5 +791,366 @@ const aNumber: number = getter.get("aNumber")
 const aString: string = getter.get("aString")
 ```
 
+## Decorators
 
+A decorator is a function used to modify properties or methods inside a class.
+A different from JavaScript decorators and can be only used inside classes and
+are in experimental mode.\
+Therefore they must be enabled (see `tscconfig.json` in next sections):
+```json
+{
+    "emitDecoratorMetadata": true,
+}
+```
+
+A simple usage of a decorator is:
+```typescript
+class Example {
+    exampleField: string = "example";
+
+    get formattedField(): string {
+        return `The value is: ${this.exampleField}.`
+    }
+
+    @exampleDecorator
+    exampleMethod(): void {
+        console.log("Method")
+    }
+}
+
+function exampleDecorator(target: any, key: string) {
+    console.log("Target :", target)
+    console.log("Key :", key)
+}
+```
+this code will output:
+```
+Target :  Example: {} 
+Key :  exampleMethod 
+```
+Each decorator is applied one single time at the time when the class id defined.
+
+The `@` annotation is just a syntattic sugar, the code above is equal to:
+```typescript
+class Example {
+    exampleField: string = "example";
+
+    get formattedField(): string {
+        return `The value is: ${this.exampleField}.`
+    }
+
+    exampleMethod(): void {
+        console.log("Method")
+    }
+}
+
+function exampleDecorator(target: any, key: string) {
+    console.log("Target :", target)
+    console.log("Key :", key)
+}
+
+exampleDecorator(Example.prototype, "exampleMethod")
+```
+
+### Property Descriptor
+
+A Property Descriptor is an object that allows to configure a property of another
+object. The configuration options are:
+- `writable: boolean`: if the property can be changed
+- `enumerable: boolean`: if the property can be looped
+- `value: any`: the current value
+- `configurable: boolean`: if property definition can be changed or the property can be deleted
+in mormal JavaScript can be used:
+```typescript
+// code tun in the browser developers tool
+const example = {data: 'example'}
+Object.getOwnPropertyDescriptor(example, 'data')
+// {value: 'example', writable: true, enumerable: true, configurable: true}
+Object.defineProperty(example, 'data', {writable: false})
+// {data: 'example'}
+example.data = "another example"
+// 'another example'
+example
+// {data: 'example'} -> not modifiable anymore
+```
+The property descriptor can be acessed from an annotation in this way:
+```typescript
+class Example {
+    exampleField: string = "example";
+
+    get formattedField(): string {
+        return `The value is: ${this.exampleField}.`
+    }
+
+    @descriptorExample
+    exampleMethod(): void {
+        throw new Error("Error")
+    }
+}
+
+function descriptorExample(target: any, key: string, desc: PropertyDescriptor) {
+    console.log("Target :", target)
+    console.log("Key :", key)
+    console.log("Property Descriptor :", desc)
+}
+```
+the output will be:
+```
+"Target :",  Example: {} 
+"Key :",  "exampleMethod" 
+"Property Descriptor :",  {
+  "writable": true,
+  "enumerable": false,
+  "configurable": true
+} 
+```
+the access to the descriptor allows to control the workflow like for logging errors:
+```typescript
+class Example {
+    exampleField: string = "example";
+
+    get formattedField(): string {
+        return `The value is: ${this.exampleField}.`
+    }
+
+    @logError
+    exampleMethod(): void {
+        throw new Error("Error")
+    }
+}
+
+function logError(target: any, key: string, desc: PropertyDescriptor) {
+    const method = desc.value
+
+    try {
+        method()
+    } catch (e) {
+        console.log("An error was thrown: ", e)
+    }
+}
+
+const example = new Example()
+example.exampleMethod()
+```
+the output will be:
+```
+An error was thrown:  Error 
+```
+
+### Decorator Factories
+
+It is possible to customize the behaviout of the decorator using a factory:
+```typescript
+class Example {
+    exampleField: string = "example";
+
+    get formattedField(): string {
+        return `The value is: ${this.exampleField}.`
+    }
+
+    @logError("Custom error message")
+    exampleMethod(): void {
+        throw new Error("Error")
+    }
+}
+
+function logError(errorMessage: string) {
+    return function logError(target: any, key: string, desc: PropertyDescriptor) {
+        const method = desc.value
+
+        try {
+            method()
+        } catch (e) {
+            console.log(errorMessage)
+        }
+    }
+}
+
+const example = new Example()
+example.exampleMethod()
+```
+In this case the output will be:
+```
+Custom error message
+```
+
+### Property Decorators
+
+Decorator on propreties can be defined as folloes:
+```typescript
+class Example {
+    @examplePropertyDecorator
+    exampleField: string = "example";
+
+    get formattedField(): string {
+        return `The value is: ${this.exampleField}.`
+    }
+
+    exampleMethod(): void {
+        throw new Error("Error")
+    }
+}
+
+function examplePropertyDecorator(target: any, key: string) {
+    console.log("Target :", target)
+    console.log("Key :", key)
+    console.log(target[key])
+    console.log(target.exampleField)
+}
+```
+It is important to notice that a decorator cannot access the current instance 
+property values:
+```
+Target : Example: {} 
+Key : exampleField 
+undefined
+undefined
+```
+
+### Decorable Properties
+
+All the possible places where to use a decorator inside typescript are:
+```typescript
+@classDecorator // class
+class Example {
+    @exampleDecorator // property
+    exampleField: string = "example";
+
+    @exampleDecorator // accessor
+    get formattedField(): string {
+        return `The value is: ${this.exampleField}.`
+    }
+
+    @exampleDecorator // accessor
+    set lowerCaseExample(example: string) {
+        this.exampleField = example.toLocaleLowerCase()
+    }
+
+    @exampleDecorator // method
+    exampleMethod(
+        @patameterDecorator exampleParameter: string // parameter
+    ): void {
+        console.log(exampleParameter)
+    }
+}
+
+// function exampleDecorator(target: Example, key: string) {
+function exampleDecorator(target: any, key: string) {
+    console.log("exampleDecorator")
+    console.log("Key :", key)
+}
+
+// function patameterDecorator(target: Example, key: string, index: number) {
+function patameterDecorator(target: any, key: string, index: number) {
+    console.log("patameterDecorator")
+    console.log(key , index)
+}
+
+// function classDecorator(constructor: Function)
+function classDecorator(constructor: typeof Example) {
+    console.log("classDecorator")
+    console.log(constructor)
+}
+```
+since there are types, it is a good idea to insert the type of the target
+when the decorator must be applied only to a specific type or base type.
+
+## Metadata
+
+Metadata is an experimental feature added to JavaScript and so to TypeScript too.
+It provides more informations on any object, like methods, propreties or class definitions
+and can be used for customizations.
+TypeScript can, optionally, send type information as metadata.
+It must be enable using (see `tscconfig.json` in next sections):
+```json
+{
+    "emitDecoratorMetadata": true,
+}
+```
+It can be read and written using the `reflect-metadata` package.
+```bash
+npm i reflect-metadata
+// to run the code
+ts-node src/metadata.ts
+```
+a simple metadata usage is:
+```typescript
+import 'reflect-metadata';
+
+const example = {
+    field: 'example',
+};
+
+// metaExample will be not visible in the actual console log
+Reflect.defineMetadata('metaExample', 'example meta', example); 
+
+console.log(example)
+
+const metaExample = Reflect.getMetadata('metaExample', example)
+
+// now the metaExample can be logged
+console.log(metaExample)
+
+// field metadata
+Reflect.defineMetadata('fieldMetaExample', 'example field meta', example, 'field'); 
+const fieldMetaExample = Reflect.getMetadata('fieldMetaExample', example, 'field')
+console.log(fieldMetaExample)
+```
+
+### Metadata And Decorators
+
+```typescript
+import 'reflect-metadata';
+
+class Example {
+    property: string = 'example property';
+
+    @metaDecorator
+    method(): void {
+        console.log('example method');
+    }
+}
+
+function metaDecorator(target: Example, key: string) {
+    Reflect.defineMetadata('meta', 'example meta', target, key);
+}
+
+const meta = Reflect.getMetadata('meta', Example.prototype, 'method');
+console.log(meta);
+```
+```typescript
+import 'reflect-metadata';
+
+class Example {
+    property: string = 'example property';
+
+    @metaDecorator('example meta')
+    method(): void {
+        console.log('example method');
+    }
+}
+
+function metaDecorator(meta: string) {
+    return function (target: Example, key: string) {
+        Reflect.defineMetadata('meta', meta, target, key);
+    };
+}
+
+const meta = Reflect.getMetadata('meta', Example.prototype, 'method');
+console.log(meta);
+```
+It is possible to access all the class meta using:
+```typescript
+@printMetadata
+class Example {
+    // ...
+}
+
+function printMetadata(target: typeof Example) {
+    for (let key in target.prototype) { // working with es5 but not with es2016
+        const meta = Reflect.getMetadata('meta', target.prototype, key);
+        console.log(`${key}: ${meta}`);
+    }
+}
+```
 
