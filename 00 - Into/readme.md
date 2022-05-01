@@ -28,6 +28,37 @@ sudo npm i -g ts-node
 ```
 `ts-node` is a command line tool used to compile and run typescript in the terminal.
 
+### tsc
+
+Once installed TypeScript is possible to configure the root directory of a projext
+using a `tsconfing.json` file:
+```bash
+tsc --init
+```
+this file has some useful configuration like:
+- **rootDir**: base code directory, example `./src`, default current 
+- **outDir**:  output directory for the Javascript build files, example `./build`, default current
+- **target**: language version, default `es2016` 
+- **strict**:  strict type checking, default `true`
+- **experimentalDecorators**: strict type checking, default `false`
+- **emitDecoratorMetadata**: strict type checking, default `false` 
+it is possible to automatically compile the code using
+```bash
+tsc -w
+```
+
+### node and nodemon
+
+After the code is build automatically it is possible to run it once using:
+```bash
+node build/index.js 
+```
+or to rerun it every time it is rebuilded using:
+```bash
+nodemon build/index.js 
+```
+
+
 ## First Example
 
 Some fake data is provided by [jsonplaceholder](https://jsonplaceholder.typicode.com/).

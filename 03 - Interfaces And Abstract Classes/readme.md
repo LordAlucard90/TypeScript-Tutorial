@@ -11,7 +11,7 @@
 
 ## Setup Compiling
 
-In order to configure the **tsc** compiler, it is possible to run the command
+In order to configure the typescript compiler, it is possible to run the command
 ```bash
 tsc --init
 ```

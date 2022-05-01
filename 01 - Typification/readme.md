@@ -130,7 +130,7 @@ let value: number; // number
 let numbers = [-10, -1, 12];
 let numberAboveZero = false;
 
-for (let 1 = 0; i < numbers.length; i++) {
+for (let i = 0; i < numbers.length; i++) {
     if (numbers[i]) {
         // don't do, just an example
         numberAboveZero = numbers[i]; // this gives an error
@@ -145,7 +145,7 @@ let numbers = [-10, -1, 12];
 // even if it is possible doesn't mean that should be done
 let numberAboveZero: boolean | number = false; // multiple type possible
 
-for (let 1 = 0; i < numbers.length; i++) {
+for (let i = 0; i < numbers.length; i++) {
     if (numbers[i]) {
         numberAboveZero = numbers[i];
    }
@@ -178,22 +178,22 @@ const addInferred = (a: number, b: number) => {
     return a + b;
 }
 // with no return the void is inferred
-const addInferred = (a: number, b: number) => {
-    // 
+const voidInferred = (a: number, b: number) => {
+    console.log(a, b);
 }
 ```
 
 The `void` keyword means that no return is expected:
 ```typescript
-const logger = (message: string): void {
+const logger = (message: string): void => {
     console.log(message);
 }
 ```
 
 The `never` keyword indicates that the end of the function will never be reached:
 ```typescript
-const error = (message: string): never {
-    throws new Error(message);
+const error = (message: string): never => {
+    throw new Error(message);
 }
 ```
 
@@ -208,40 +208,41 @@ const todaysForecast = {
 };
 
 // without destructuring
-const logWeather = (forecast: {date: Date, weather: string}): void => {
+const logWeatherWithout = (forecast: {date: Date, weather: string}): void => {
     console.log(forecast.date);
     console.log(forecast.weather);
 };
+logWeatherWithout(todaysForecast)
 
 // with destructuring
-const logWeather = ({ date, weather }: {date: Date, weather: string}): void => {
+const logWeatherWith = ({ date, weather }: {date: Date, weather: string}): void => {
     console.log(date);
     console.log(weather);
 };
-
-
-logWeather(todaysForecast)
+logWeatherWith(todaysForecast)
 ```
 
 For object destructuring it can be done in this way:
 ```typescript
 const profile = {
-    name: 'Pippo',
+    user: 'Pippo',
     age: 20,
     coordinates: {
         latitude: 42,
         longitude: 24,
     },
     setAge(age: number): void {
-        this.age: age;
-    }
-}
-
-const { age }: {age: number} = profile;
-const { age, name }: {age: number, name: string} = profile;
+        this.age = age;
+    },
+};
+                                                                                                                
+// const { age }: { age: number } = profile;
+// const { user }: { user: string } = profile;
+const { age, user }: { age: number; user: string } = profile;
 const {
-    coordinates: {latitude, longitude}
-}: {coordinates: {latitude: number, longitude: number}} = profile
+    coordinates: { latitude, longitude },
+}: { coordinates: { latitude: number; longitude: number } } = profile;
+console.log(user, age, latitude, longitude)
 ```
 
 ## Arrays
@@ -348,7 +349,7 @@ enum MixedResponse {
   Yes = "YES",
 }
 ```
-thier values can be revese mapped:
+their values can be reverse mapped:
 ```typescript
 enum Enum {
   A,
@@ -386,9 +387,9 @@ const oldCivic = { // valid Vehicle
 };
 
 const printVehicle = (vehicle: Vehicle): void => {
-    console.log(`Name: %{vehicle.name}`);
-    console.log(`Year: %{vehicle.year}`);
-    console.log(`Broken? %{vehicle.broken}`);
+    console.log(`Name: ${vehicle.name}`);
+    console.log(`Year: ${vehicle.year}`);
+    console.log(`Broken? ${vehicle.broken}`);
 }
 
 printVehicle(oldCivic);
@@ -405,7 +406,7 @@ const oldCivic = { // valid Vehicle
     year: 2000,
     broken: true,
     summery(): string {
-        return `Name %{this.name}`;
+        return `Name ${this.name}`;
     }
 };
 
@@ -423,10 +424,10 @@ The scope of a class is to introduce a new type and add functionality:
 class Vehicle {
     drive(): void {
         console.log("Brummmmm");
-    }.
+    }
     honk(): void {
         console.log("Beeep");
-    },
+    }
 }
 
 const vehicle = new Vehicle();
@@ -439,16 +440,16 @@ Classes allows to use inheritance:
 class Vehicle {
     drive(): void {
         console.log("Brummmmm");
-    }.
+    }
     honk(): void {
         console.log("Beeep");
-    },
+    }
 }
 
 class Car extends Vehicle { // inheritance
     drive(): void {
         console.log("Vrum Vrum");
-    }.
+    }
 }
 
 const car = new Car();
@@ -467,25 +468,24 @@ The child class can not change the modifier of the parent.
 
 ```typescript
 class Vehicle {
-    // property and constructor definition #1
-    color: string = 'red';
-    year: number;
+    color: string;
+    seats: number = 4; // public and default value
 
-    constructor(year: number) {
-        this.year = year;
-    }
-
-    // property and constructor definition #2
-    constructor(public year: number, public color: string = red) { // TODO check
+    constructor(
+        public year: number, // automatically set
+        color: string = 'red', // must be assigned explicitly and has a default value
+    ) {
+        this.color = color.toLowerCase();
     }
 
     // methods
     drive(): void {
-        console.log("Brummmmm");
-    }.
+        console.log('Brummmmm');
+    }
+
     honk(): void {
-        console.log("Beeep");
-    },
+        console.log('Beeep');
+    }
 }
 ```
 
@@ -494,20 +494,43 @@ equal to the base class, or define their own, in this case they must call
 the super method with the required parameters of the base one:
 ```typescript
 class Vehicle {
-    constructor(public color: string){}
-}
+    color: string;
+    seats: number = 4; // public and default value
 
-// case #1
-class Car extends Vehicle {}
-const cat = new Car("black");
+    constructor(
+        public year: number, // automatically set
+        color: string = 'red', // must be assigned explicitly and has a default value
+    ) {
+        this.color = color.toLowerCase();
+    }
 
-// case #2
-class Motorbike extends Vehicle {
-    constructor(color: string){
-        super(color);
+    // methods
+    drive(): void {
+        console.log('Brummmmm');
+    }
+
+    honk(): void {
+        console.log('Beeep');
     }
 }
-const motorbike = new Motorbike("red");
+
+class Car extends Vehicle {
+    // inheritance
+    drive(): void {
+        console.log('Vrum Vrum');
+    }
+}
+
+class Motorbike extends Vehicle {
+    seats: number = 2;
+
+    constructor(year: number){
+        super(year, "black");
+    }
+}
+const car = new Car(2020);
+const car2 = new Car(2021, 'BLUE');
+const motorbike = new Motorbike(2023)
 ```
 
 ### Interfaces Extension
@@ -589,7 +612,43 @@ motorbike.honk()
 
 ### Accessors
 
-TODO get set 
+It is possible to use special methods `get` and `set` to manage properties
+transparently:
+```typescript
+enum Color {
+    R = 'red',
+    G = 'green',
+    B = 'blue',
+}
+
+abstract class MotorVehicle implements Vehicle {
+    color: string;
+    seats: number = 4; // public and default value
+    abstract wheels: number;
+
+    constructor(
+        public year: number, // automatically set
+        color: string = 'red', // must be assigned explicitly and has a default value
+    ) {
+        this.color = color.toLowerCase();
+    }
+
+    // methods
+    drive(): void {
+        console.log('Brummmmm');
+    }
+
+    abstract honk(): void;
+
+    get colorEnum(): Color {
+        return this.color as Color;
+    }
+
+    set colorEnum(color: Color) {
+        this.color = color.toString();
+    }
+}
+```
 
 ### Static Class Members
 
@@ -608,6 +667,93 @@ console.log(DateContainer.CREATION);
 console.log(DateContainer.now());
 ```
 
+### All Together
+
+```typescript
+interface Vehicle {
+    color: string;
+    year: number;
+    drive(): void;
+}
+
+enum Color {
+    R = 'red',
+    G = 'green',
+    B = 'blue',
+}
+
+abstract class MotorVehicle implements Vehicle {
+    color: string;
+    seats: number = 4; // public and default value
+    abstract wheels: number;
+
+    constructor(
+        public year: number, // automatically set
+        color: string = 'red', // must be assigned explicitly and has a default value
+    ) {
+        this.color = color.toLowerCase();
+    }
+
+    // methods
+    drive(): void {
+        console.log('Brummmmm');
+    }
+
+    abstract honk(): void;
+
+    get colorEnum(): Color {
+        return this.color as Color;
+    }
+
+    set colorEnum(color: Color) {
+        this.color = color.toString();
+    }
+}
+
+class Car extends MotorVehicle {
+    wheels: number = 4;
+
+    // inheritance
+    drive(): void {
+        console.log('Vrum Vrum');
+    }
+
+    honk(): void {
+        console.log('Beeep');
+    }
+}
+
+class Motorbike extends MotorVehicle {
+    seats: number = 2;
+
+    constructor(year: number, public wheels: number) {
+        super(year, 'green');
+    }
+
+    honk(): void {
+        console.log('Beeep');
+    }
+}
+
+class UniquePieceVehicle extends MotorVehicle {
+    private static INSTANCE = new UniquePieceVehicle() 
+
+    public static getInstance(): UniquePieceVehicle {
+        return this.INSTANCE;
+    }
+
+    wheels: number = 5;
+    private constructor() {
+        super(1969, 'red');
+    }
+
+    honk(): void {
+        console.log('Buuuuup');
+    }
+}
+```
+
+
 ## Type Guards
 
 When the type is not completely defined, for example an element can be null
@@ -619,12 +765,13 @@ let variableDate = string | Date
 It is possible to use a type Guard to force locally the current type of the
 variable and to be able to see all its methods:
 ```typescript
-let possibleNull = string | undefined
-if(possibleNull) {
-    possibleNull.toUpperCase() // now this operation is safe
+let possibleNull: string | undefined = 'something';
+
+if (possibleNull) {
+    possibleNull.toUpperCase(); // now this operation is safe
 }
 
-let variableDate = string | Date
+let variableDate: string | Date = new Date();
 if (variableDate instanceof Date) {
     // date methods are accessible in this scope
 }
@@ -667,7 +814,7 @@ const arrayOfStrings = new ArrayOfStrings(["a", "b", "c"]);
 The generic equivalent implementation is:
 ```typescript
 class ArrayOfAnything<T> {
-    constructor(public collection: T[])
+    constructor(public collection: T[]){}
 
     get(index: number): T {
         return this.collection[index];
@@ -769,7 +916,7 @@ printHousesOrCars([new Car(), new House()])
 Given a generic class and a get attribute method that retrieves one of the values
 of the composed object, it is possible to infer the return type in this way:
 ```typescript
-class Composed {
+interface Composed {
     aNumber: number;
     aString: string;
 }
@@ -796,10 +943,10 @@ const aString: string = getter.get("aString")
 A decorator is a function used to modify properties or methods inside a class.
 A different from JavaScript decorators and can be only used inside classes and
 are in experimental mode.\
-Therefore they must be enabled (see `tscconfig.json` in next sections):
+Therefore they must be enabled (see `tsconfig.json` in next sections):
 ```json
 {
-    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
 }
 ```
 
@@ -1061,7 +1208,7 @@ Metadata is an experimental feature added to JavaScript and so to TypeScript too
 It provides more informations on any object, like methods, propreties or class definitions
 and can be used for customizations.
 TypeScript can, optionally, send type information as metadata.
-It must be enable using (see `tscconfig.json` in next sections):
+It must be enable using in the `tsconfig.json` file:
 ```json
 {
     "emitDecoratorMetadata": true,
